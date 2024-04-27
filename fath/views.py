@@ -1,10 +1,17 @@
 from django.shortcuts import render
-
+from . import models 
 # Create your views here.
 
 
 def index(request):
-    return render(request, 'fath/index.html')
+    categories = models.Category.objects.all()
+    products = models.Product.objects.all().order_by('-id')
+    cantex = {
+        'categories':categories,
+        'products':products,
+    }
+    
+    return render(request, 'fath/index.html', cantex)
 
 
 def shop(request):
