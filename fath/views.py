@@ -1,21 +1,35 @@
 from django.shortcuts import render
+from django.views.generic import ListView
 from . import models 
 # Create your views here.
 
 
-def index(request):
-    categories = models.Category.objects.all()
-    products = models.Product.objects.all().order_by('-id')
-    cantex = {
-        'categories':categories,
-        'products':products,
+class IndexList(ListView):
+    model = models.Product
+    template_name = 'fath/index.html'
+    context_object_name = 'products'
+    extra_context = {
+        'categories': models.Category.objects.filter(parent=None),
+        'products': models.Product.objects.all().order_by('-id')
     }
+
+
+class ShopList(IndexList):
+    template_name = 'fath/shop.html'
+
+# def index(request):
+#     categories = models.Category.objects.all()
+#     products = models.Product.objects.all().order_by('-id')
+#     cantex = {
+#         'categories':categories,
+#         'products':products,
+#     }
     
-    return render(request, 'fath/index.html', cantex)
+#     return render(request, 'fath/index.html', cantex)
 
 
-def shop(request):
-    return render(request, 'fath/shop.html')
+# def shop(request):
+#     return render(request, 'fath/shop.html')
 
 
 def shop_detail(request):
