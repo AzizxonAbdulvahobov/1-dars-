@@ -36,6 +36,3 @@ class ProductAdmin(admin.ModelAdmin):
             return mark_safe(f'<img src="{product.img.url}" width="75px;">')
         
     prepopulated_fields = {'slug': ('name',)}
-
-
-     
