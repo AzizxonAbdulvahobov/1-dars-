@@ -149,3 +149,13 @@
 
 })(jQuery);
 
+
+
+function redirectToPage() {
+    var selectElement = document.getElementById('my_select');
+    var selectedValue = selectElement.options[selectElement.selectedIndex].value;
+    if (selectedValue) {
+        // Tanlangan qiymatga mos sahifaga o'tish
+        window.location.href = selectedValue;
+    }
+}
