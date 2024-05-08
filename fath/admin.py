@@ -2,7 +2,8 @@
 from django.contrib import admin
 from . import models
 from django.utils.safestring import mark_safe
-# Register your models here.
+# Register your models here
+
 
 
 # all_models = apps.get_models()
@@ -36,3 +37,5 @@ class ProductAdmin(admin.ModelAdmin):
             return mark_safe(f'<img src="{product.img.url}" width="75px;">')
         
     prepopulated_fields = {'slug': ('name',)}
+
+admin.site.register(models.Rating)

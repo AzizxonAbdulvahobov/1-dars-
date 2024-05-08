@@ -7,7 +7,7 @@ urlpatterns = [
     path('sorting/<slug:key_name>', views.SortingProductList.as_view(), name='sorting'),
     path('subcategory/<slug:slug>', views.SortingBySubcategories.as_view(), name='subcategory'),
     path('shop-detail/<slug:slug>', views.ShopDetail.as_view(), name='shop_detail'),
-    path('rate/<int:product_id>/<int:rating>', views.rate),
+    path('rate/<int:product_id>/<int:rating>/', views.rate),
 
     path('cart/', views.cart, name='cart'),
     path('chackout/', views.chackout, name='chackout'),
