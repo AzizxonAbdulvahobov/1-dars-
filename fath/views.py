@@ -1,6 +1,6 @@
 from typing import Any
-from django.shortcuts import render
-from django.views.generic import ListView
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView
 from . import models 
 # Create your views here.
 
@@ -36,6 +36,41 @@ class SortingBySubcategories(ShopList):
         context['products'] = subcategory.product_set.all()
         return context
 
+
+def index(request):
+    posts = models.Product.objects.all()
+    for post in posts:
+        rating = models.Rating.objects.all()
+        post.user_rating = rating.rating if rating else 0
+    return render(request, "fath/shop-detail.html")
+
+
+
+class ShopDetail(DetailView):
+    model = models.Product
+    context_object_name = 'product'
+    template_name = 'fath/shop-detail.html'
+    extra_context = {
+        'categories': models.Category.objects.filter(parent=None) 
+    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = models.Product.objects.get(slug=self.kwargs['slug'])
+        rating = models.Rating.objects.filter(product=product, user=self.request.user).first()
+        context['user_rating']= rating.rating if rating else 0
+        return context
+
+
+def rate(request, product_id, rating):
+    product = models.Product.objects.get(pk=product_id)
+    models.Rating.objects.filter(product=product, user=request.user).delete()
+    product.rating_set.create(user=request.user, rating=rating)
+    return redirect('shop_detail' , slug=product.slug)
+
+
+
+
 # def sorting(request, key_name):
 #     context = {
 #         'products': models.Product.objects.filter(filter_choice=key_name),
@@ -68,16 +103,17 @@ class SortingBySubcategories(ShopList):
 #     return render(request, 'fath/shop.html')
 
 
-def shop_detail(request, product_id):
-    product = models.Product.objects.get(pk=product_id)
-    categories = models.Category.objects.filter(parent=None)
-    products = models.Product.objects.all()
-    context = {
-        'product':product,
-        'categories':categories,
-        'products':products
-    }
-    return render(request, 'fath/shop-detail.html', context)
+
+# def shop_detail(request, product_id):
+#     product = models.Product.objects.get(pk=product_id)
+#     categories = models.Category.objects.filter(parent=None)
+#     products = models.Product.objects.all()
+#     context = {
+#         'product':product,
+#         'categories':categories,
+#         'products':products
+#     }
+#     return render(request, 'fath/shop-detail.html', context)
 
 
 def cart(request):

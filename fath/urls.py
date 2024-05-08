@@ -6,7 +6,9 @@ urlpatterns = [
     path('shop/', views.ShopList.as_view() , name='shop'),
     path('sorting/<slug:key_name>', views.SortingProductList.as_view(), name='sorting'),
     path('subcategory/<slug:slug>', views.SortingBySubcategories.as_view(), name='subcategory'),
-    path('shop-detail/<int:product_id>/', views.shop_detail, name='shop_detail'),
+    path('shop-detail/<slug:slug>', views.ShopDetail.as_view(), name='shop_detail'),
+    path('rate/<int:product_id>/<int:rating>', views.rate),
+
     path('cart/', views.cart, name='cart'),
     path('chackout/', views.chackout, name='chackout'),
     path('testimonial/', views.testimonial, name='testimonial'),

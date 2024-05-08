@@ -4,6 +4,26 @@
 {% block content %}
 
 
+<style>
+    .rating-list li {
+      float: right;
+      color: #ddd;
+      padding: 10px 5px;
+    }
+
+    .rating-list li:hover,
+    .rating-list li:hover ~ li {
+      color: orange;
+    }
+
+    .rating-list {
+      display: inline-block;
+      list-style: none;
+    }
+    .checked {
+        color: orange;
+    }
+</style>
 
 
         <!-- Modal Search Start -->
@@ -30,8 +50,8 @@
         <div class="container-fluid page-header py-5">
             <h1 class="text-center text-white display-6">Shop Detail</h1>
             <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop' %}">Back</a></li>
                 <li class="breadcrumb-item active text-white">Shop Detail</li>
             </ol>
         </div>
@@ -55,13 +75,19 @@
                                 <h4 class="fw-bold mb-3">{{product.name}}</h4>
                                 <p class="mb-3">Category: {{product.category}}</p>
                                 <h5 class="fw-bold mb-3">{{product.price}} $</h5>
-                                <div class="d-flex mb-4">
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star text-secondary"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
+                                
+                            <ul class="list-inline rating-list">
+                                <li onclick="rate(5, {{ product.pk }})">
+                                    <i class="fa fa-star {% if user_rating > 4 %} checked {% endif %}" title="Rate 5"></i></li>
+                                <li onclick="rate(4, {{ product.pk }})">
+                                    <i class="fa fa-star {% if user_rating > 3 %} checked {% endif %}" title="Rate 4"></i></li>
+                                <li onclick="rate(3, {{ product.pk }})">
+                                    <i class="fa fa-star {% if user_rating > 2 %} checked {% endif %}" title="Rate 3"></i></li>
+                                <li onclick="rate(2, {{ product.pk }})">
+                                    <i class="fa fa-star {% if user_rating > 1 %} checked {% endif %}" title="Rate 2"></i></li>
+                                <li onclick="rate(1, {{ product.pk }})">
+                                    <i class="fa fa-star {% if user_rating > 0 %} checked {% endif %}" title="Rate 1"></i></li>
+                            </ul>
                                 <p class="mb-4">{{product.body|linebreaks}}</p>
                                 <div class="input-group quantity mb-5" style="width: 100px;">
                                     <div class="input-group-btn">
@@ -116,9 +142,7 @@
                                                             <p class="mb-0">Quality</p>
                                                         </div>
                                                         <div class="col-6">
-                                                            {% if product.filter_choice %}
                                                                 <p class="mb-0">{{ product.get_filter_choice_display }}</p>
-                                                            {% endif %}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -365,10 +389,11 @@
                 <h1 class="fw-bold mb-0">Related products</h1>
                 <div class="vesitable">
                     <div class="owl-carousel vegetable-carousel justify-content-center">
-                        {% for product in products %}
+                        {% for product in product.category.product_set.all %}
+                        {% if product != product %}
                         <div class="border border-primary rounded position-relative vesitable-item">
                             <div class="vesitable-img">
-                                <a href="{% url 'shop_detail' product.id %}"><img src="{{product.img.url}}" class="img-fluid w-100 rounded-top" alt=""></a>
+                                <a href="{% url 'shop_detail' product.slug %}"><img src="{{product.img.url}}" class="img-fluid w-100 rounded-top" alt=""></a>
                             </div>
                             <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">{{product.category}}</div>
                             <div class="p-4 pb-0 rounded-bottom">
@@ -380,6 +405,7 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
                         {% endfor %}
 
                     </div>
