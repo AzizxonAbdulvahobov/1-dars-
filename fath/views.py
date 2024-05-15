@@ -118,9 +118,11 @@ def rate(request, product_id, rating):
 
 
 def cart(request):
-    cart_info = CartAuthenTicatedUser(request)
+    cart_info = CartAuthenTicatedUser(request).get_cart_info()
     context = {
-        'order_products':cart_info.get_cart_info()['order_products']
+        'order_products':cart_info['order_products'],
+        'cart_total_price':cart_info['cart_total_price'],
+        'cart_total_quantity':cart_info['cart_total_quantity']
     }
     return render(request, 'fath/cart.html', context)
 

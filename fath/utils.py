@@ -20,9 +20,16 @@ class CartAuthenTicatedUser:
         )
 
         order_products = order.orderproduct_set.all()
+
+
+        cart_total_price = order.get_cart_total_price
+        cart_total_quantity = order.get_cart_total_quantity
+
         return{
             'order':order,
-            'order_products':order_products
+            'order_products':order_products,
+            'cart_total_price':cart_total_price,
+            'cart_total_quantity':cart_total_quantity
         }
 
     def add_or_delete(self, product_id, action):
@@ -33,10 +40,10 @@ class CartAuthenTicatedUser:
             product=product
         )
 
-        if action == 'add':
+        if action == 'add' and product.quantity>0:
             order_product.quantity += 1
             product.quantity -= 1
-        else:
+        elif action == 'delete' :
             order_product.quantity -= 1
             product.quantity += 1
 
