@@ -1,9 +1,11 @@
 from typing import Any
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
+from django.http import HttpResponse
 from . import models 
+from .utils import CartAuthenTicatedUser
 # Create your views here.
-
+from django.contrib.auth.models import User , AbstractBaseUser
 
 class IndexList(ListView):
     model = models.Product
@@ -61,7 +63,6 @@ class ShopDetail(DetailView):
         context['user_rating']= rating.rating if rating else 0
         return context
 
-
 def rate(request, product_id, rating):
     product = models.Product.objects.get(pk=product_id)
     models.Rating.objects.filter(product=product, user=request.user).delete()
@@ -117,7 +118,11 @@ def rate(request, product_id, rating):
 
 
 def cart(request):
-    return render(request, 'fath/cart.html')
+    cart_info = CartAuthenTicatedUser(request)
+    context = {
+        'order_products':cart_info.get_cart_info()['order_products']
+    }
+    return render(request, 'fath/cart.html', context)
 
 
 def chackout(request):
@@ -135,3 +140,24 @@ def error_page(request):
 def contact(request):
     return render(request, 'fath/contact.html')
 
+
+
+def register(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        password_confirm = request.POST['password-confirm']
+        if password==password_confirm:
+            User.objects.create_user(
+                username=username,
+                password=password
+            )
+    return render(request, 'fath/register.html')
+
+
+def to_cart(request, product_id, action):
+    if request.user.is_authenticated:
+        CartAuthenTicatedUser(request, product_id, action)
+        current_page = request.META.get('HTTP_REFERER', 'index')
+        return redirect(current_page)
+    return HttpResponse('Iltimos avval royhatdan o`ting')

@@ -8,8 +8,10 @@ urlpatterns = [
     path('subcategory/<slug:slug>', views.SortingBySubcategories.as_view(), name='subcategory'),
     path('shop-detail/<slug:slug>', views.ShopDetail.as_view(), name='shop_detail'),
     path('rate/<int:product_id>/<int:rating>/', views.rate),
+    path('register/', views.register, name='register'),
 
     path('cart/', views.cart, name='cart'),
+    path('tto_cart/<int:product_id>/<str:action>/', views.to_cart, name='to_cart'),
     path('chackout/', views.chackout, name='chackout'),
     path('testimonial/', views.testimonial, name='testimonial'),
     path('404/', views.error_page, name='404'),

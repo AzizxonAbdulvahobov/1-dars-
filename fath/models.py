@@ -51,3 +51,39 @@ class Rating(models.Model):
 
     def __str__(self) :
         return f"{self.product.name}:{self.rating}"
+    
+
+
+
+
+
+class Customer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    first_name = models.CharField(max_length=255, null=True, default='')
+    last_name = models.CharField(max_length=255, null=True, default='')
+
+
+class Order(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    is_activ = models.BooleanField(default=True)
+
+
+class OrderProduct(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    quantity = models.IntegerField(default=0)
+    added = models.DateTimeField(auto_now_add=True)
+
+
+class ShippingAddress(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+    addres = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    distict = models.CharField(max_length=255)
+    zip_code = models.CharField(max_length=255)
+    phone = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255)
+
+
+ 
