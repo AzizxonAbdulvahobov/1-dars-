@@ -4,6 +4,9 @@ from django.views.generic import ListView, DetailView
 from django.http import HttpResponse
 from . import models 
 from .utils import CartAuthenTicatedUser
+from shop import settings
+from django.urls import reverse
+import stripe
 # Create your views here.
 from django.contrib.auth.models import User , AbstractBaseUser
 
@@ -163,3 +166,34 @@ def to_cart(request, product_id, action):
         current_page = request.META.get('HTTP_REFERER', 'index')
         return redirect(current_page)
     return HttpResponse('Iltimos avval royhatdan o`ting')
+
+
+def create_checkout_sessions(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    user_cart = CartAuthenTicatedUser(request)
+    cart_info = user_cart.get_cart_info()
+    total_price = cart_info['cart_total_price']
+    total_quantity = cart_info['cart_total_quantity']
+    session = stripe.checkout.Session.create(
+        line_items=[{
+            'price_data': {
+                'currency': 'usd',
+                'product_data': {
+                    'name': 'Online Shop mahsulotlari'
+                },
+                'unit_amount': int(total_price * 100)
+            },
+            'quantity': total_quantity
+        }],
+        mode='payment',
+        success_url=request.build_absolute_uri(reverse('success')),
+        cancel_url=request.build_absolute_uri(reverse('success')),
+    )
+    return redirect(session.url, 303)
+
+
+
+def success_payment(request):
+    return render(request, 'fath/success.html')
+
+
