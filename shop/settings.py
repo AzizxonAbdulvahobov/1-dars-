@@ -132,3 +132,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STRIPE_PUBLISHABLE_KEY = 'pk_test_51PH3ABJlJ3y311YfzJ13cdJRyVhveoJTRuk6FH2TqXm0Q2Odu4M3XC4Qc5Y4qLxuoMkt6PGP5wpzr48ozhN91laV00rSBDODwq'
 STRIPE_SECRET_KEY = 'sk_test_51PH3ABJlJ3y311YfXggnGHSNWxNsrt55RSAjpMCL7kOATlvvgz5mvPkfh3bRzuYuYG7F1BZczeyoFLhjiJ0gC8wx00xT7HsXSl'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'azizxonabdulvahobov08@gmail.com'
+EMAIL_HOST_PASSWORD = 'rdriqrjjmvazpktf'

@@ -7,6 +7,9 @@ from .utils import CartAuthenTicatedUser
 from shop import settings
 from django.urls import reverse
 import stripe
+
+from django.core.mail import send_mail
+
 # Create your views here.
 from django.contrib.auth.models import User , AbstractBaseUser
 
@@ -197,3 +200,15 @@ def success_payment(request):
     return render(request, 'fath/success.html')
 
 
+
+
+
+def send_message_to_client(request):
+    send_mail(
+        "Bizda aktsiya",
+        "Abduvohid 😝😝",
+        settings.EMAIL_HOST_USER,
+        ["azizxonn791@gmail.com"],
+        fail_silently=False,
+    )
+    return redirect('success')
