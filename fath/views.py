@@ -7,6 +7,7 @@ from .utils import CartAuthenTicatedUser
 from shop import settings
 from django.urls import reverse
 import stripe
+from django.contrib.auth import authenticate, login, logout
 
 from django.core.mail import send_mail
 
@@ -161,6 +162,26 @@ def register(request):
                 password=password
             )
     return render(request, 'fath/register.html')
+
+
+def log_in(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username,password=password)
+
+        if user:
+            login(request, user)
+            return redirect('index')
+        else:
+            return redirect('register')
+
+    return render(request, 'fath/login.html')
+
+def log_out(request):
+    logout(request)
+    return redirect('index')
+
 
 
 def to_cart(request, product_id, action):
